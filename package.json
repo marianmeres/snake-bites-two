@@ -1,0 +1,30 @@
+{
+  "name": "snake-core",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dist/index.js",
+  "scripts": {
+    "clean": "rimraf dist/*",
+    "build": "npm run clean && tsc",
+    "dev": "npm run clean && tsc -w",
+    "prettier": "prettier --write \"{src,tests,examples}/**/*.{js,ts,json}\"",
+    "test": "nodemon -q --watch \"dist/*.*\" --watch \"tests/*.*\" tests/ --"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/marianmeres/snake-core.git"
+  },
+  "author": "Marian Meres <marian@meres.sk>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/marianmeres/snake-core/issues"
+  },
+  "homepage": "https://github.com/marianmeres/snake-core#readme",
+  "devDependencies": {
+    "@types/node": "^17.0.5",
+    "prettier": "^2.5.1",
+    "rimraf": "^3.0.2",
+    "test-runner": "github:marianmeres/test-runner",
+    "typescript": "^4.5.4"
+  }
+}
