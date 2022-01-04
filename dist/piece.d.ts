@@ -1,12 +1,50 @@
-import { PieceAtom } from './piece-atom';
-export declare class Piece {
-    protected _atoms: PieceAtom[];
+import { Board } from './board.js';
+import { Atom } from './atom.js';
+export declare abstract class Piece {
     static readonly DIRECTION: {
         NORTH: string;
         EAST: string;
         SOUTH: string;
         WEST: string;
     };
-    renderer: Function;
-    constructor(_atoms: PieceAtom[]);
+    static readonly MOVE_STRATEGY: {
+        SNAKE: string;
+        FIXED: string;
+    };
+    board: Board;
+    protected _atoms: Atom[];
+    protected _preUpdateSortOrder: number;
+    moveStrategy: string;
+    speed: number;
+    direction: any;
+    protected _nextDirectionStack: any[];
+    readonly id: string;
+    protected _postMoveActionStack: any[];
+    label: string;
+    custom: any;
+    protected constructor();
+    protected _assertAtoms(): this;
+    get preUpdateSortOrder(): number;
+    get atoms(): Atom[];
+    get mainAtom(): Atom;
+    set x(x: number);
+    set y(y: number);
+    get x(): number;
+    get y(): number;
+    get xy(): number[];
+    get isMoving(): any;
+    protected _reindexAtoms(): this;
+    update(): this;
+    atomize(): Atom[][];
+    protected _customCollisionHandler(atom: Atom): Boolean;
+    protected _mayberHandleCollision(preUpdateAtomsGrid: Atom[][], oldX: number, oldY: number): void;
+    postMoveActionStackPush(fn: Function): Piece;
+    turnNorth(): this;
+    turnEast(): this;
+    turnSouth(): this;
+    turnWest(): this;
+    nextNorth(): void;
+    nextEast(): void;
+    nextSouth(): void;
+    nextWest(): void;
 }

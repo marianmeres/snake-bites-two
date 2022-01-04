@@ -1,10 +1,12 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.renderMultipleBoards = void 0;
 // debug helper
-const trim_lines_1 = require("./trim-lines");
-const renderMultipleBoards = (renderedBoards, labels = [], print = false) => {
-    const hSep = '  ';
+import { trimLines } from './trim-lines.js';
+/**
+ * Will render multiple boards horizontaly side by side, so it's easy to visualy compare
+ * @param renderedBoards
+ * @param labels
+ */
+export const renderMultipleBoards = (renderedBoards, labels = []) => {
+    const hSep = '   '; // 3 spaces - so the width matches "[ ]"
     const vSep = '\n';
     let out = '';
     //
@@ -15,7 +17,7 @@ const renderMultipleBoards = (renderedBoards, labels = [], print = false) => {
     renderedBoards.forEach((board, bIdx) => {
         const lines = [];
         let boardW = 0;
-        (0, trim_lines_1.trimLines)(board)
+        trimLines(board)
             .split('\n')
             .forEach((line, lIdx) => {
             lines[lIdx] = lines[lIdx] || [];
@@ -43,8 +45,5 @@ const renderMultipleBoards = (renderedBoards, labels = [], print = false) => {
     }
     // trim trailing \n
     out = out.trim();
-    if (print)
-        console.log(out);
-    return print ? null : out;
+    return out;
 };
-exports.renderMultipleBoards = renderMultipleBoards;

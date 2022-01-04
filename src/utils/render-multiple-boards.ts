@@ -1,12 +1,16 @@
 // debug helper
-import { trimLines } from './trim-lines';
+import { trimLines } from './trim-lines.js';
 
+/**
+ * Will render multiple boards horizontaly side by side, so it's easy to visualy compare
+ * @param renderedBoards
+ * @param labels
+ */
 export const renderMultipleBoards = (
 	renderedBoards: string[],
-	labels: string[] = [],
-	print = false
+	labels: string[] = []
 ): string => {
-	const hSep = '  ';
+	const hSep = '   '; // 3 spaces - so the width matches "[ ]"
 	const vSep = '\n';
 	let out = '';
 
@@ -51,7 +55,5 @@ export const renderMultipleBoards = (
 	// trim trailing \n
 	out = out.trim();
 
-	if (print) console.log(out);
-
-	return print ? null : out;
+	return out;
 };

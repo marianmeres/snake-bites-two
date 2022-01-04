@@ -1,0 +1,419 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="author" content="Marian Meres <marian@meres.sk>">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link href="node_modules/bootstrap/dist/css/bootstrap-reboot.min.css" rel="stylesheet">
+
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Luckiest+Guy&display=swap" rel="stylesheet">
+
+	<title>Snake bites two! (Classic snake game for two players)</title>
+
+	<style>
+		body {
+			height: 100vh;
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+			align-items: center;
+			font-family: var(--bs-font-monospace);
+			background: cyan;
+			padding: 1rem;
+		}
+
+		h1, h2, h3 {
+			font-family: 'Luckiest Guy', var(--bs-font-sans-serif);
+		}
+
+		h1 {
+			font-size: calc(1.375rem + 3vw);
+			-webkit-text-stroke: 2px white;
+		}
+		a {
+			color: black;
+		}
+		a:hover {
+			color: deeppink;
+		}
+		button {
+			border: 3px solid black;
+			padding: 4px 8px;
+			background: white;
+			color: black;
+		}
+		button:focus,
+		button:hover {
+			outline: none;
+			box-shadow: 3px 3px white;
+		}
+
+		/********************************************************************************/
+		#top {
+			margin-bottom: 2rem;
+			text-align: center;
+			max-width: 600px;
+		}
+
+		#bottom {
+			margin-top: 2rem;
+			text-align: center;
+			max-width: 600px;
+		}
+
+		#bottom .cpr {
+			margin-top: 3rem; opacity: .6; border-top: 1px solid rgba(0, 0, 0, .3);
+			padding-top: 1rem;
+		}
+
+		/********************************************************************************/
+		#scores {
+			display: flex;
+			flex-direction: row;
+			flex-wrap: nowrap;
+			justify-content: space-between;
+			align-items: center;
+			width: calc(15 * min(6vw, 4vh) + 10px);
+			min-width: calc(15 * 15px + 10px);
+			max-width: calc(15 * 40px + 10px);
+		}
+		#scores .score {
+			background: black;
+			color: rgba(255, 255, 255, .75);
+			padding: 3px 10px;
+		}
+		#scores .score b {
+			color: white;
+			font-weight: bold;
+			font-size: 1.1em;
+		}
+		#scores .title {
+			padding: 3px 0;
+			font-weight: bold;
+		}
+
+		/********************************************************************************/
+		#game {
+			position: relative;
+		}
+
+		/********************************************************************************/
+		#game .board {
+			font-size: calc(1rem + min(2vw, 1.5vh));
+			line-height: 1;
+			border: 5px solid rgba(0, 0, 0, 1);
+			display: block;
+			background: white;
+			min-height: calc(15 * 15px);
+			min-width: calc(15 * 15px);
+		}
+		#game .board .row {
+			display: flex;
+		}
+		#game .board span {
+			outline: 1px dashed rgba(0, 0, 0, .1);
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			width: min(6vw, 4vh);
+			height: min(6vw, 4vh);
+			max-width: 40px;
+			max-height: 40px;
+			min-width: 15px;
+			min-height: 15px;
+		}
+		#game .board span.shead.snake1, #game .board span.sbody.snake1 {
+			background: mediumvioletred;
+		}
+		#game .board span.shead.snake2, #game .board span.sbody.snake2 {
+			background: darkcyan;
+		}
+		#game .board span.sbody {
+			opacity: .50;
+		}
+		#game .board span.obstacle {
+			border-radius: 10px;
+		}
+
+		/********************************************************************************/
+		#game .modal {
+			position: absolute;
+			inset: 0;
+			background: rgba(186, 85, 211, .8);
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			padding: 6rem 1rem 1rem 1rem;
+			text-align: center;
+		}
+		#game .modal .buttons {
+			margin: 2rem 0 3rem 0;
+		}
+
+		#game .modal h1, #game .modal h2 {
+			margin: 0;
+			color: white;
+			-webkit-text-stroke: 2px black;
+		}
+		#game .modal h2 {
+			/*font-size: 2.5rem;*/
+		}
+
+	</style>
+</head>
+<body>
+	<script data-name="icon_check_circle" type="application/x-ejs">
+		<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check-circle-fill" viewBox="0 0 16 16">
+			<path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"/>
+		</svg>
+	</script>
+
+	<div id="top">
+		<h1>Snake bites two</h1>
+		<p>Eat apples and lollipops. Avoid poo-poo. Enjoy!</p>
+	</div>
+
+	<div id="scores"></div>
+
+	<section id="game">
+		<div class="board"><div style="padding: 2rem; text-align: center">Loading, please wait...</div></div>
+		<div class="modal"></div>
+	</section>
+
+	<div id="bottom">
+		<p>
+			Use <kbd>&larr;</kbd> <kbd>&uarr;</kbd> <kbd>&darr;</kbd> <kbd>&rarr;</kbd> for <b>player1</b>
+			and <kbd>A</kbd> <kbd>W</kbd> <kbd>S</kbd> <kbd>D</kbd> for <b>player2</b>.
+		</p>
+
+		<p class='cpr'>
+			<small>
+				Copyright <a href="mailto:marian@meres.sk">Marian &amp; Lukáš Mereš</a>,
+				source on <a href="https://github.com/marianmeres/snake-bites-two">GitHub</a>.
+			</small>
+		</p>
+	</div>
+
+	<script type="module">
+		import { PlainTextTemplate } from "./dist/renderer/plain-text.js";
+		import { $each, $on, qs, qsa } from "./dist/utils/dom.js";
+		import { createStore } from "./dist/utils/create-store.js";
+		import { createComponentFactory } from "./dist/utils/create-component-factory.js";
+		import { Game } from "./dist/game.js";
+		import { isFn } from "./dist/utils/is-fn.js";
+		import { GAME_EVENT } from "./dist/constants.js";
+		import template from "./node_modules/lodash-es/template.js";
+
+
+		/* compile this landing page ejs templates (if any) *****************************/
+		const EJS = {};
+		$each(qsa('script[type="application/x-ejs"]'), (v) => {
+			if (v.dataset.name) EJS[v.dataset.name] = template(v.innerText, { variable: 'data' });
+		});
+
+
+		/* stores ***********************************************************************/
+		const scores = createStore({ score1: 0, score2: 0 });
+		const twoPlayerSwitch = createStore(false);
+		const boardHTML = createStore('');
+		const gameLoopState = createStore({
+			wasRunning: false, isRunning: false, isPaused: false
+		});
+		const lastCollision = createStore({});
+
+
+		/* this landing page components *************************************************/
+
+		// scores
+		createComponentFactory({
+			init() {
+				this.render();
+			},
+			render() {
+				this.$el.innerHTML = this.tpl(this.props.get());
+			},
+			get tpl() {
+				if (!this._tpl) {
+					this._tpl = template(`
+						<div class="score">Player1: <b><%= data.score1 || 0 %></b></div>
+						<div class="title">Scores</div>
+						<div class="score">Player2: <b><%= data.score2 || 0 %></b></div>
+					`, { variable: 'data' })
+				}
+				return this._tpl;
+			}
+		})(scores, { el: qs('#scores') });
+
+		// board
+		createComponentFactory({
+			init() {
+				this._previousHTML = void 0;
+				this.render()
+			},
+			render() {
+				// since our game update clock ticks intentionally much slower (~4Hz)
+				// than render clock (~60Hz) we can save unnecessary updates...
+				const _currentHTML = this.props.get();
+				if (this._previousHTML !== _currentHTML) {
+					this.$el.innerHTML = _currentHTML;
+					this._previousHTML = _currentHTML;
+				}
+			}
+		})(boardHTML, { el: qs('#game .board') })
+
+		// game modal
+		createComponentFactory({
+			init() {
+				this.subscribe(twoPlayerSwitch);
+				this.subscribe(gameLoopState);
+				this.$on('button.single', 'click', () => twoPlayerSwitch.set(false));
+				this.$on('button.multi', 'click', () => twoPlayerSwitch.set(true));
+				this.$on('button.again', 'click', () => {
+					gameLoopState.update((prev) => ({ ...prev, wasRunning: false }));
+					initialize();
+				});
+				this.render();
+			},
+			render() {
+				const { wasRunning, isRunning, isPaused } = gameLoopState.get();
+				if (isRunning || isPaused) {
+					this.hide();
+				} else if (wasRunning) {
+					this._renderGameOver();
+				} else {
+					this._renderIntro();
+				}
+			},
+			_renderIntro() {
+				this.show();
+				const two = twoPlayerSwitch.get();
+				this.$el.innerHTML = this.templateIntro({
+					single: !two,
+					multi: two,
+					icon: EJS.icon_check_circle({}),
+				});
+				this.qs(`button.${two ? 'multi' : 'single'}`).focus();
+			},
+			_renderGameOver() {
+				this.show();
+				const two = twoPlayerSwitch.get();
+				const { collidingPieces } = lastCollision.get();
+				let detail;
+				if (two) {
+					// special case head to head collision - higher score wins
+					if (collidingPieces.length === 2) {
+						let score1 = collidingPieces[0].score.get();
+						let score2 = collidingPieces[1].score.get();
+						if (score1 === score2) {
+							detail = `Head to head with equal score! No winner...`;
+						} else {
+							collidingPieces.sort((a, b) => b.score.get() - a.score.get());
+							detail = `Winner is ${collidingPieces[0].label}!`;
+						}
+					} else {
+						const win = { Player1: 'Player2', Player2: 'Player1' };
+						const s = collidingPieces[0];
+						detail = `Winner is ${win[s.label]}!`;
+					}
+				} else {
+					detail = `Your score is ${scores.get().score1}.`;
+				}
+				this.$el.innerHTML = this.templateGameOver({ detail });
+				this.qs('button.again').focus();
+			},
+			get templateIntro() {
+				if (!this._tplIntro) {
+					this._tplIntro = template(`
+						<h1>Choose...</h1>
+						<div class="buttons">
+							<button class="single">
+								<%= data.single ? data.icon : '' %> Single player
+							</button>
+							or
+							<button class="multi">
+								<%= data.multi ? data.icon : '' %> Two players
+							</button>
+						</div>
+						<h2>...and hit an arrow key to start!</h2>
+					`, { variable: 'data' })
+				}
+				return this._tplIntro;
+			},
+			get templateGameOver() {
+				if (!this._tplOver) {
+					this._tplOver = template(`
+						<h1>Game over!</h1>
+						<h2><%= data.detail %></h2>
+						<div class="buttons">
+							<button class="again">Play again</button>
+						</div>
+					`, { variable: 'data' })
+				}
+				return this._tplOver;
+			},
+		})({}, { el: qs('#game .modal') })
+
+
+		/* Game stuff *******************************************************************/
+
+		// This is just a quick-n-dirty (and probably expensive) misuse of the plain-text
+		// debug renderer... I guess it could be easily optimized:
+		// - either as dom manipulation based render (modifying dom nodes instead
+		//   of constantly replacing the entire innerHTML)
+		// - or as canvas drawing...
+		// Both should be doable via Board.renderer and Atom.renderer
+
+		PlainTextTemplate.CELL_EMPTY = () => '<span></span>';
+		PlainTextTemplate.ATOM_APPLE = (atom) => '<span class="apple">&#x1F34E;</span>';
+		PlainTextTemplate.ATOM_SNAKE_HEAD = (atom) => `<span class="shead ${atom.piece.custom?.cssClass}"></span>`;
+		PlainTextTemplate.ATOM_SNAKE_BODY = (atom) => `<span class="sbody ${atom.piece.custom?.cssClass}"></span>`;
+		PlainTextTemplate.ATOM_OBSTACLE = (atom) => '<span class="obstacle">&#x1F4A9;</span>';
+		PlainTextTemplate.ATOM_BONUS = (atom) => '<span class="obstacle">&#x1F36D;</span>';
+		PlainTextTemplate.ROW = (cells) => `<div class="row">${cells}</div>`;
+
+		let unsubs = [];
+		const tearDownFn = () => {
+			unsubs.forEach((fn) => isFn(fn) && fn());
+			unsubs = [];
+		}
+
+		const renderFn = (b) => boardHTML.set(b.toString());
+
+		const initialize = () => {
+			tearDownFn();
+
+			const { loop, onKeydown, snakes, board } = Game.create({
+				twoPlayers: twoPlayerSwitch.get(), renderFn, tearDownFn
+			});
+
+			// "forward" loop state
+			unsubs.push(loop.state.subscribe((v) => gameLoopState.set(v)));
+
+			// key bindings
+			unsubs.push($on(document, 'keydown', onKeydown));
+
+			// scores
+			snakes.forEach((s, idx) => {
+				unsubs.push(s.score.subscribe((v) => {
+					scores.update((prev) => ({...prev, [`score${idx + 1}`]: v }));
+				}))
+			});
+
+			unsubs.push(board.pubsub.subscribe(GAME_EVENT.COLLISION, lastCollision.set));
+
+			renderFn(board);
+		}
+
+		// init new game on game time swich
+		twoPlayerSwitch.subscribe(initialize);
+
+		// lastCollision.subscribe(({ message }) => console.log(message));
+		lastCollision.subscribe(console.log);
+
+		// kick off now
+		initialize();
+	</script>
+</body>
+</html>
