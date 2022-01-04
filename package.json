@@ -1,7 +1,9 @@
 {
   "name": "snake-bites-two",
   "version": "1.0.0",
-  "description": "",
+  "author": "Marian Meres <marian@meres.sk>",
+  "description": "Snake game",
+  "keywords": ["javascript", "typescript"],
   "type": "module",
   "main": "dist/index.js",
   "scripts": {
@@ -16,7 +18,6 @@
     "type": "git",
     "url": "git+https://github.com/marianmeres/snake-bites-two.git"
   },
-  "author": "Marian Meres <marian@meres.sk>",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/marianmeres/snake-bites-two/issues"
