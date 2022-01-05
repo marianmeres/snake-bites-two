@@ -10,7 +10,7 @@
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 	<link href="https://fonts.googleapis.com/css2?family=Luckiest+Guy&display=swap" rel="stylesheet">
 
-	<title>Snake bites two! (Classic snake game for two players)</title>
+	<title>Snake bites two! Classic snake-like game for 1 or 2 players</title>
 
 	<style>
 		:root {
@@ -192,6 +192,8 @@
 		</svg>
 	</script>
 
+	<noscript>This app requires javascript!</noscript>
+
 	<div id="top">
 		<h1>Snake bites two</h1>
 		<p>Eat apples and lollipops. Avoid poo-poo. Enjoy!</p>
@@ -252,13 +254,13 @@
 		// scores
 		createComponentFactory({
 			init() {
-				this.speedMap = { baby: 2, cool: 5, insane: 10, wtf: 20 };
+				this.speedMap = { easy: 2, cool: 5, crazy: 10, insane: 20 };
 				this.subscribe(speed);
 				this.subscribe(gameLoopState);
-				this.$on('button.baby', 'click', () => speed.set(this.speedMap.baby));
+				this.$on('button.easy', 'click', () => speed.set(this.speedMap.easy));
 				this.$on('button.cool', 'click', () => speed.set(this.speedMap.cool));
+				this.$on('button.crazy', 'click', () => speed.set(this.speedMap.crazy));
 				this.$on('button.insane', 'click', () => speed.set(this.speedMap.insane));
-				this.$on('button.wtf', 'click', () => speed.set(this.speedMap.wtf));
 				this.render();
 			},
 			render() {
@@ -280,10 +282,10 @@
 					this._tpl = template(`
 						<div class="score">Player1: <b><%= data.score1 || 0 %></b></div>
 						<div class="speed">
-							<button class="baby" title="Sets snake speed">Baby</button>
+							<button class="easy" title="Sets snake speed">Easy</button>
 							<button class="cool" title="Sets snake speed">Cool</button>
+							<button class="crazy" title="Set snake speed">Crazy</button>
 							<button class="insane" title="Set snake speed">Insane</button>
-							<button class="wtf" title="Set snake speed">WTF</button>
 						</div>
 						<div class="score">Player2: <b><%= data.score2 || 0 %></b></div>
 					`, { variable: 'data' })

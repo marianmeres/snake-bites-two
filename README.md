@@ -5,7 +5,7 @@ Classic
 browser game made during Christmas holidays of 2021, where
 my son is being the chief game designer.
 
-Play online at http://snake-bites-two.meres.sk/
+Play online at http://snake.meres.sk/
 
 Enjoy!
 
