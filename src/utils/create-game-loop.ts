@@ -66,16 +66,12 @@ export const createGameLoop = (
 		let delta = updateStart - updateLast;
 		totalElapsedMs += delta;
 
-		// Note: MDN states, that one should keep track of how large the queueCount is.
+		// Normally, this should be exactly 1.
 		// If it is large, then either the game was asleep, or the machine cannot keep up.
-		// normally, this should be exactly 1
 		let queueCount = Math.max(1, Math.floor(delta / interval));
-		if (queueCount !== 1) {
-			console.warn('queueCount', queueCount);
-		}
 
-		// for obscure cases (was asleep too long maybe? - NOT REALLY TESTED, JUST GUESSING),
-		// limit the queue length so we don't kill the thread...
+		// for obscure cases (left running loop in the background tab),
+		// limit the queue length so we don't kill the thread, when resumed back in...
 		queueCount = Math.min(10, queueCount);
 
 		while (queueCount--) {
