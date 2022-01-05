@@ -186,7 +186,7 @@ export abstract class Piece {
 			this.board.pubsub.publish(GAME_EVENT.COLLISION, {
 				collidingPieces,
 				collidingAtom,
-				message
+				message,
 			});
 
 			throw new Collision(message);

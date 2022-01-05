@@ -13,6 +13,7 @@ interface FactoryOptions {
 	twoPlayers: boolean;
 	x: number;
 	y: number;
+	updateTickFrequencyHz: number;
 	// use zero to have no shit at all
 	maxObstacles: number;
 	// use zero to never show bonus
@@ -27,11 +28,12 @@ interface FactoryOptions {
 
 const defaultFactoryOptions = {
 	twoPlayers: false,
-	x: 15,
-	y: 15,
-	maxObstacles: 3,
+	x: 23,
+	y: 13,
+	updateTickFrequencyHz: 5,
+	maxObstacles: 5,
 	// the lower value, the higher prob (1 on each bonus like event)
-	bonusProbability: 3,
+	bonusProbability: 2,
 	eatAppleScore: 2,
 	eatBonusScore: 5,
 };
@@ -67,7 +69,7 @@ export class Game {
 
 		snakes = snakes.map((s, idx) => {
 			const i = idx + 1;
-			s.custom = { ...s.custom, cssClass: `snake${i}`};
+			s.custom = { ...s.custom, cssClass: `snake${i}` };
 			s.label = `Player${i}`;
 			return s;
 		});
@@ -88,17 +90,23 @@ export class Game {
 
 		// maybe set up obstacles
 		if (options.maxObstacles > 0) {
-			const oCount = getRandomIntInclusive(1, options.maxObstacles);
+			const oCount = getRandomIntInclusive(
+				Math.max(1, Math.floor(options.maxObstacles * 0.6)),
+				options.maxObstacles
+			);
 			for (let i = 0; i < oCount; i++) {
 				board.setPieceAtRandomEmptyXY(new Obstacle());
 			}
 		}
 
+		// speed config (will effect score updates as well)
+		let hz = Math.round(options.updateTickFrequencyHz);
+
 		// set up typical game mechanics
 		board.pubsub.subscribe(GAME_EVENT.SNAKE_EATS_APPLE, (snake) => {
 			snake.addPostMoveTailAtoms(2);
 			board.setPieceAtRandomEmptyXY(new Apple());
-			snake.score.update((v) => v + options.eatAppleScore);
+			snake.score.update((v) => v + options.eatAppleScore + hz);
 
 			if (options.bonusProbability) {
 				const bonus = getRandomIntInclusive(1, Math.abs(options.bonusProbability));
@@ -109,19 +117,21 @@ export class Game {
 					setTimeout(() => {
 						const cell = board.cell(x, y);
 						if (cell === bonus) board.setPiece(x, y, null);
-					}, getRandomIntInclusive(5_000, 10_000));
+					}, getRandomIntInclusive(5_000, 15_000));
 				}
 			}
 		});
 
 		board.pubsub.subscribe(GAME_EVENT.SNAKE_EATS_BONUS, (snake) => {
-			snake.score.update((v) => v + options.eatBonusScore);
+			snake.score.update((v) => v + options.eatBonusScore + hz);
 		});
 
 		// setup game loop (do not start yet)
 		const loop = createGameLoop(
-			// this controls snake speed
-			() => ({ updateTickFrequencyHz: 4 }),
+			() => ({
+				// decrease one hz if two...
+				updateTickFrequencyHz: Math.max(2, options.twoPlayers ? hz - 1 : hz),
+			}),
 			() => {
 				try {
 					board.update();

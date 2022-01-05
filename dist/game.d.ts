@@ -5,6 +5,7 @@ interface FactoryOptions {
     twoPlayers: boolean;
     x: number;
     y: number;
+    updateTickFrequencyHz: number;
     maxObstacles: number;
     bonusProbability: number;
     eatAppleScore: number;

@@ -13,6 +13,13 @@
 	<title>Snake bites two! (Classic snake game for two players)</title>
 
 	<style>
+		:root {
+			--cell-xy: min(4vw, 3.5vh);
+			--cell-x-count: 23;
+			--cell-y-count: 13;
+			--cell-min-xy: 20px;
+			--cell-max-xy: 40px;
+		}
 		body {
 			height: 100vh;
 			display: flex;
@@ -29,7 +36,6 @@
 		}
 
 		h1 {
-			font-size: calc(1.375rem + 3vw);
 			-webkit-text-stroke: 2px white;
 		}
 		a {
@@ -75,9 +81,9 @@
 			flex-wrap: nowrap;
 			justify-content: space-between;
 			align-items: center;
-			width: calc(15 * min(6vw, 4vh) + 10px);
-			min-width: calc(15 * 15px + 10px);
-			max-width: calc(15 * 40px + 10px);
+			width: calc(var(--cell-x-count) * var(--cell-xy) + 10px);
+			min-width: calc(var(--cell-x-count) * var(--cell-min-xy) + 10px);
+			max-width: calc(var(--cell-x-count) * var(--cell-max-xy) + 10px);
 		}
 		#scores .score {
 			background: black;
@@ -89,9 +95,22 @@
 			font-weight: bold;
 			font-size: 1.1em;
 		}
-		#scores .title {
-			padding: 3px 0;
-			font-weight: bold;
+		#scores .speed button {
+			padding: 0;
+			border: 0;
+			font-size: .8em;
+			line-height: 1;
+			background: transparent;
+		}
+		#scores .speed button.active,
+		#scores .speed button:focus,
+		#scores .speed button:hover {
+			box-shadow: none;
+			background: white;
+		}
+		#scores .speed button[disabled] {
+			opacity: .7;
+			cursor: not-allowed;
 		}
 
 		/********************************************************************************/
@@ -101,13 +120,14 @@
 
 		/********************************************************************************/
 		#game .board {
-			font-size: calc(1rem + min(2vw, 1.5vh));
+			font-size: calc(1rem + min(.6vw, .6vh));
+			/*font-size: 1rem;*/
 			line-height: 1;
 			border: 5px solid rgba(0, 0, 0, 1);
 			display: block;
 			background: white;
-			min-height: calc(15 * 15px);
-			min-width: calc(15 * 15px);
+			min-height: calc(var(--cell-y-count) * var(--cell-min-xy));
+			min-width: calc(var(--cell-x-count) * var(--cell-min-xy));
 		}
 		#game .board .row {
 			display: flex;
@@ -117,12 +137,12 @@
 			display: flex;
 			justify-content: center;
 			align-items: center;
-			width: min(6vw, 4vh);
-			height: min(6vw, 4vh);
+			width: var(--cell-xy);
+			height: var(--cell-xy);
 			max-width: 40px;
 			max-height: 40px;
-			min-width: 15px;
-			min-height: 15px;
+			min-width: 20px;
+			min-height: 20px;
 		}
 		#game .board span.shead.snake1, #game .board span.sbody.snake1 {
 			background: mediumvioletred;
@@ -130,11 +150,12 @@
 		#game .board span.shead.snake2, #game .board span.sbody.snake2 {
 			background: darkcyan;
 		}
+		#game .board span.shead {
+			border-radius: 5px;
+		}
 		#game .board span.sbody {
 			opacity: .50;
-		}
-		#game .board span.obstacle {
-			border-radius: 10px;
+			border-radius: 5px;
 		}
 
 		/********************************************************************************/
@@ -144,8 +165,9 @@
 			background: rgba(186, 85, 211, .8);
 			display: flex;
 			flex-direction: column;
+			justify-content: center;
 			align-items: center;
-			padding: 6rem 1rem 1rem 1rem;
+			/*padding: 6rem 1rem 1rem 1rem;*/
 			text-align: center;
 		}
 		#game .modal .buttons {
@@ -222,6 +244,7 @@
 			wasRunning: false, isRunning: false, isPaused: false
 		});
 		const lastCollision = createStore({});
+		const speed = createStore(5);
 
 
 		/* this landing page components *************************************************/
@@ -229,16 +252,39 @@
 		// scores
 		createComponentFactory({
 			init() {
+				this.speedMap = { baby: 2, cool: 5, insane: 10, wtf: 20 };
+				this.subscribe(speed);
+				this.subscribe(gameLoopState);
+				this.$on('button.baby', 'click', () => speed.set(this.speedMap.baby));
+				this.$on('button.cool', 'click', () => speed.set(this.speedMap.cool));
+				this.$on('button.insane', 'click', () => speed.set(this.speedMap.insane));
+				this.$on('button.wtf', 'click', () => speed.set(this.speedMap.wtf));
 				this.render();
 			},
 			render() {
-				this.$el.innerHTML = this.tpl(this.props.get());
+				const { isRunning } = gameLoopState.get();
+				const s = speed.get();
+				this.$el.innerHTML = this.tpl({ ...this.props.get() });
+				this.$each('.speed button', (b) => {
+					b.disabled = isRunning;
+					b.classList.remove('active');
+					Object.keys(this.speedMap).forEach((k) => {
+						if (b.classList.contains(k) && this.speedMap[k] === s) {
+							b.classList.add('active');
+						}
+					});
+				});
 			},
 			get tpl() {
 				if (!this._tpl) {
 					this._tpl = template(`
 						<div class="score">Player1: <b><%= data.score1 || 0 %></b></div>
-						<div class="title">Scores</div>
+						<div class="speed">
+							<button class="baby" title="Sets snake speed">Baby</button>
+							<button class="cool" title="Sets snake speed">Cool</button>
+							<button class="insane" title="Set snake speed">Insane</button>
+							<button class="wtf" title="Set snake speed">WTF</button>
+						</div>
 						<div class="score">Player2: <b><%= data.score2 || 0 %></b></div>
 					`, { variable: 'data' })
 				}
@@ -385,7 +431,10 @@
 			tearDownFn();
 
 			const { loop, onKeydown, snakes, board } = Game.create({
-				twoPlayers: twoPlayerSwitch.get(), renderFn, tearDownFn
+				updateTickFrequencyHz: speed.get(),
+				twoPlayers: twoPlayerSwitch.get(),
+				renderFn,
+				tearDownFn,
 			});
 
 			// "forward" loop state
@@ -408,9 +457,11 @@
 
 		// init new game on game time swich
 		twoPlayerSwitch.subscribe(initialize);
+		speed.subscribe(initialize);
 
-		// lastCollision.subscribe(({ message }) => console.log(message));
-		lastCollision.subscribe(console.log);
+		lastCollision.subscribe(({ message }) => console.log(message));
+		// lastCollision.subscribe(console.log);
+		// speed.subscribe(console.log);
 
 		// kick off now
 		initialize();
