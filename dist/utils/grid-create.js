@@ -1,5 +1,5 @@
 import { isFn } from './is-fn.js';
-export const createGrid = (width, height, cellValueOrFactory = null) => {
+export const gridCreate = (width, height, cellValueOrFactory = null) => {
     const grid = [];
     for (let x = 0; x < width; x++) {
         for (let y = 0; y < height; y++) {

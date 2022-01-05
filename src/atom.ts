@@ -75,6 +75,16 @@ export class Atom {
 		return [this.x, this.y];
 	}
 
+	// gets relative direction to previous atom in stack
+	get dirToPrevious() {
+		return 'todo';
+	}
+
+	// gets relative direction to next atom in stack
+	get dirToNext() {
+		return 'todo';
+	}
+
 	protected _updateCoordinates(oldAtomsCoords: AtomCoords[]) {
 		// ?
 		const step = this.piece.speed;

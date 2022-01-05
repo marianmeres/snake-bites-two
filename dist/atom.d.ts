@@ -30,6 +30,8 @@ export declare class Atom {
     set y(y: number);
     get y(): number;
     get xy(): number[];
+    get dirToPrevious(): string;
+    get dirToNext(): string;
     protected _updateCoordinates(oldAtomsCoords: AtomCoords[]): this;
     protected _updateOffsets(oldAtomsCoords: AtomCoords[]): this;
     update(oldAtomsCoords: AtomCoords[]): this;

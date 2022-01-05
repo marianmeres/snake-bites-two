@@ -1,7 +1,7 @@
 import { createPubSub } from './create-pub-sub.js';
 import { assertTypeFn, isFn } from './is-fn.js';
 // naive ducktype discovery
-export const isStoreLike = (v) => isFn(v.subscribe) && isFn(v.get) && isFn(v.set);
+export const isStoreLike = (v) => isFn(v.subscribe) && isFn(v.get);
 export const createStore = (initial, { persist } = { persist: null }) => {
     let _pubsub = createPubSub();
     let _value = initial;
@@ -29,3 +29,37 @@ export const createStore = (initial, { persist } = { persist: null }) => {
     };
     return { set, get, update, subscribe, subscribeOnce };
 };
+/* WIP
+export const createDerivedStore = (stores: StoreLike[], deriveFn: Function): StoreReadable => {
+    const derived = createStore(null);
+    const values = [];
+    const unsubs = [];
+
+    // save initial values...
+    stores.forEach((s) => {
+        if (!isStoreLike(s)) throw new TypeError('Expecting array of stores');
+        values.push(s.get())
+    });
+
+    // subscribe to each individually, but call outFn with all values
+    stores.forEach((s, idx) => {
+        unsubs.push(s.subscribe((value) => {
+            values[idx] = value;
+            derived.set(deriveFn(...values));
+        }))
+    });
+
+    const derivedUnsub = derived.subscribe()
+
+    const unsubscribe = () => unsubs.forEach((fn) => fn());
+
+    const subscribe = (event, cb) => {
+        const unsub = derived.subscribe(event, cb);
+        return () => {
+            unsubscribe()
+        };
+    }
+
+    return { get: derived.get, subscribe, subscribeOnce };
+}
+*/

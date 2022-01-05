@@ -1,5 +1,5 @@
 import { assertTypeFn, isFn } from './is-fn.js';
-import { createStore, StoreLike } from './create-store.js';
+import { createStore, StoreLike, StoreReadable } from './create-store.js';
 
 interface LoopConfig {
 	// how many logic updates per second?
@@ -28,7 +28,7 @@ export interface GameLoop {
 	isRunning: boolean;
 	wasRunning: boolean;
 	isPaused: boolean;
-	state: StoreLike;
+	state: StoreReadable;
 }
 
 export const createGameLoop = (
@@ -40,7 +40,7 @@ export const createGameLoop = (
 ): GameLoop => {
 	assertTypeFn([configFn, updateFn, renderFn], '[createGameLoop]');
 
-	// Unlike typical approaches found on the web for html5 js gaming
+	// Unlike typical approaches found on the web for html5 js gaming with single raf loop
 	// (e.g: https://developer.mozilla.org/en-US/docs/Games/Anatomy)
 	// I feel like creating two separate loops (one for game updates, one for render)
 	// is nicer and conceptually cleaner...
@@ -70,8 +70,8 @@ export const createGameLoop = (
 		// If it is large, then either the game was asleep, or the machine cannot keep up.
 		let queueCount = Math.max(1, Math.floor(delta / interval));
 
-		// for obscure cases (left running loop in the background tab),
-		// limit the queue length so we don't kill the thread, when resumed back in...
+		// for obscure cases (left running loop in the background tab for too long),
+		// limit the queue length so we don't kill the thread when resumed...
 		queueCount = Math.min(10, queueCount);
 
 		while (queueCount--) {

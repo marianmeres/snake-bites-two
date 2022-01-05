@@ -1,6 +1,6 @@
 import { isFn } from './is-fn.js';
 
-export const createGrid = (
+export const gridCreate = (
 	width: number,
 	height: number,
 	cellValueOrFactory: any = null

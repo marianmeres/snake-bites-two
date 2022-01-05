@@ -1,9 +1,9 @@
 import { GAME_EVENT } from './constants.js';
-import { createGrid } from './utils/create-grid.js';
+import { gridCreate } from './utils/grid-create.js';
 import { normalizeCoordinate } from './utils/normalize-coordinate.js';
 import { Piece } from './piece.js';
 import { gridForEach } from './utils/grid-foreach.js';
-import { mergeGrids } from './utils/merge-grids.js';
+import { gridMerge } from './utils/grid-merge.js';
 import { isFn } from './utils/is-fn.js';
 import { renderGridPlainText } from './renderer/plain-text.js';
 import { createPubSub } from './utils/create-pub-sub.js';
@@ -32,11 +32,11 @@ export class Board {
 	}
 
 	createGrid(cellFactory = null) {
-		return createGrid(this.x, this.y, cellFactory);
+		return gridCreate(this.x, this.y, cellFactory);
 	}
 
 	mergeGrids(...grids) {
-		return mergeGrids(this.x, this.y, ...grids);
+		return gridMerge(this.x, this.y, ...grids);
 	}
 
 	forEachXY(cb: Function) {

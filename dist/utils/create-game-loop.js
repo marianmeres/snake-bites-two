@@ -11,7 +11,7 @@ const cancelAF = (() => {
 })();
 export const createGameLoop = (configFn, updateFn, renderFn, setUpFn = null, tearDownFn = null) => {
     assertTypeFn([configFn, updateFn, renderFn], '[createGameLoop]');
-    // Unlike typical approaches found on the web for html5 js gaming
+    // Unlike typical approaches found on the web for html5 js gaming with single raf loop
     // (e.g: https://developer.mozilla.org/en-US/docs/Games/Anatomy)
     // I feel like creating two separate loops (one for game updates, one for render)
     // is nicer and conceptually cleaner...
@@ -33,8 +33,8 @@ export const createGameLoop = (configFn, updateFn, renderFn, setUpFn = null, tea
         // Normally, this should be exactly 1.
         // If it is large, then either the game was asleep, or the machine cannot keep up.
         let queueCount = Math.max(1, Math.floor(delta / interval));
-        // for obscure cases (left running loop in the background tab),
-        // limit the queue length so we don't kill the thread, when resumed back in...
+        // for obscure cases (left running loop in the background tab for too long),
+        // limit the queue length so we don't kill the thread when resumed...
         queueCount = Math.min(10, queueCount);
         while (queueCount--) {
             !isPaused && updateFn(delta, totalElapsedMs);
