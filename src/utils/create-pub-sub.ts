@@ -4,8 +4,8 @@ export const createPubSub = () => {
 	const _subs = new Map();
 	const _subsFor = (event) => (_subs[event] = _subs[event] || new Set());
 
-	const publish = (event, data = {}) => {
-		_subsFor(event).forEach((cb) => cb(data));
+	const publish = (event, detail = {}) => {
+		_subsFor(event).forEach((cb) => cb(detail));
 	};
 
 	const subscribe = (event, cb) => {

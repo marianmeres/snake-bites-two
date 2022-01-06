@@ -3,11 +3,11 @@ import { assertTypeFn, isFn } from './is-fn.js';
 
 export interface StoreReadable {
 	get: Function;
-	subscribe: Function;
-	subscribeOnce: Function;
+	subscribe: (cb: Function, getImmediate?: boolean) => Function;
+	subscribeOnce?: Function;
 }
 
-export interface StoreLike extends StoreReadable{
+export interface StoreLike extends StoreReadable {
 	set: Function;
 	update: Function;
 }
@@ -15,6 +15,7 @@ export interface StoreLike extends StoreReadable{
 // naive ducktype discovery
 export const isStoreLike = (v) => isFn(v.subscribe) && isFn(v.get);
 
+//
 export const createStore = (initial, { persist } = { persist: null }): StoreLike => {
 	let _pubsub = createPubSub();
 	let _value = initial;
@@ -42,44 +43,55 @@ export const createStore = (initial, { persist } = { persist: null }): StoreLike
 	};
 
 	const subscribeOnce = (cb) => {
-		assertTypeFn(cb, '[createStore.subscribe]');
+		assertTypeFn(cb, '[createStore.subscribeOnce]');
 		return _pubsub.subscribeOnce('change', cb);
 	};
 
 	return { set, get, update, subscribe, subscribeOnce };
 };
 
-/* WIP
-export const createDerivedStore = (stores: StoreLike[], deriveFn: Function): StoreReadable => {
-	const derived = createStore(null);
-	const values = [];
-	const unsubs = [];
+// svelte derived api like
+export const createDerivedStore = (
+	stores: StoreLike[],
+	deriveFn: Function
+): StoreReadable => {
+	const derived = createStore(void 0);
+	const _values = [];
 
-	// save initial values...
+	// save initial values first...
 	stores.forEach((s) => {
-		if (!isStoreLike(s)) throw new TypeError('Expecting array of stores');
-		values.push(s.get())
+		if (!isStoreLike(s)) throw new TypeError('Expecting array of StoreLike objects');
+		_values.push(s.get());
 	});
 
-	// subscribe to each individually, but call outFn with all values
+	// helper flag for first getImmediate
+	let _wasSet = false;
+
+	// subscribe to each individually and call deriveFn with all values
 	stores.forEach((s, idx) => {
-		unsubs.push(s.subscribe((value) => {
-			values[idx] = value;
-			derived.set(deriveFn(...values));
-		}))
+		// note that these subscriptions will never be unsubscribed (is it a problem?)
+		s.subscribe((value) => {
+			_values[idx] = value;
+			derived.set(deriveFn(_values));
+			_wasSet = true;
+		});
 	});
 
-	const derivedUnsub = derived.subscribe()
+	// subscribe needs a little tweak if source stores were not updated yet
+	const subscribe = (cb, getImmediate = false) => {
+		assertTypeFn(cb, '[createDerivedStore.subscribe]');
 
-	const unsubscribe = () => unsubs.forEach((fn) => fn());
+		// if never queried, set now!
+		if (getImmediate && !_wasSet) {
+			derived.set(deriveFn(_values));
+			_wasSet = true;
+		}
 
-	const subscribe = (event, cb) => {
-		const unsub = derived.subscribe(event, cb);
-		return () => {
-			unsubscribe()
-		};
-	}
+		return derived.subscribe(cb, getImmediate);
+	};
 
-	return { get: derived.get, subscribe, subscribeOnce };
-}
-*/
+	// intentionally omitting set (makes no sense for derived)
+	const { get, subscribeOnce } = derived;
+
+	return { get, subscribe, subscribeOnce };
+};

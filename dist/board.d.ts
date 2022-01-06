@@ -4,7 +4,7 @@ export declare class Board {
     readonly y: number;
     protected _cells: any[][];
     readonly pubsub: {
-        publish: (event: any, data?: {}) => void;
+        publish: (event: any, detail?: {}) => void;
         subscribe: (event: any, cb: any) => () => any;
         subscribeOnce: (event: any, cb: any) => () => any;
         unsubscribeAll: (event: any) => boolean;
