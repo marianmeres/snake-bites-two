@@ -30,8 +30,13 @@ export declare class Atom {
     set y(y: number);
     get y(): number;
     get xy(): number[];
-    get dirToPrevious(): string;
-    get dirToNext(): string;
+    get _xy(): number[];
+    get hasPrevious(): boolean;
+    get hasNext(): boolean;
+    get previous(): Atom;
+    get next(): Atom;
+    get dirToPrevious(): "N" | "E" | "S" | "W" | "NW" | "NNW" | "NWW" | "SW" | "SSW" | "SWW" | "NE" | "NNE" | "NEE" | "SE" | "SSE" | "SEE";
+    get dirToNext(): "N" | "E" | "S" | "W" | "NW" | "NNW" | "NWW" | "SW" | "SSW" | "SWW" | "NE" | "NNE" | "NEE" | "SE" | "SSE" | "SEE";
     protected _updateCoordinates(oldAtomsCoords: AtomCoords[]): this;
     protected _updateOffsets(oldAtomsCoords: AtomCoords[]): this;
     update(oldAtomsCoords: AtomCoords[]): this;

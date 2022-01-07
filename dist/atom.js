@@ -2,6 +2,7 @@ import { createId } from './utils/create-id.js';
 import { renderAtomPlainText } from './renderer/plain-text.js';
 import { isFn } from './utils/is-fn.js';
 import { Piece } from './piece.js';
+import { gridRelativeDirection } from "./utils/grid-relative-direction.js";
 export class Atom {
     piece;
     type;
@@ -56,13 +57,32 @@ export class Atom {
     get xy() {
         return [this.x, this.y];
     }
+    get _xy() {
+        return [this._x, this._y];
+    }
+    get hasPrevious() {
+        return !!this.index;
+    }
+    get hasNext() {
+        return this.index < this.piece.atoms.length - 1;
+    }
+    get previous() {
+        return this.hasPrevious ? this.piece.atoms[this.index - 1] : null;
+    }
+    get next() {
+        return this.hasNext ? this.piece.atoms[this.index + 1] : null;
+    }
     // gets relative direction to previous atom in stack
     get dirToPrevious() {
-        return 'todo';
+        if (!this.hasPrevious)
+            return null;
+        return gridRelativeDirection(this.xy, this.previous.xy);
     }
     // gets relative direction to next atom in stack
     get dirToNext() {
-        return 'todo';
+        if (!this.hasNext)
+            return null;
+        return gridRelativeDirection(this.xy, this.next.xy);
     }
     _updateCoordinates(oldAtomsCoords) {
         // ?
@@ -85,7 +105,7 @@ export class Atom {
     }
     _updateOffsets(oldAtomsCoords) {
         if (this.piece.moveStrategy === Piece.MOVE_STRATEGY.SNAKE) {
-            // sanity check - zero index atom has no offset
+            // sanity check - zero  atom has no offset
             if (this.index === 0) {
                 this._offsetX = 0;
                 this._offsetY = 0;

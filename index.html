@@ -166,13 +166,68 @@
 			background: darkcyan;
 		}
 		#game .board span.shead {
-			border-radius: 5px;
+			/*border-radius: 5px;*/
+		}
+		#game .board span.shead.dN {
+			border-top-right-radius: 50%;
+			border-top-left-radius: 50%;
+		}
+		#game .board span.shead.dE {
+			border-top-right-radius: 50%;
+			border-bottom-right-radius: 50%;
+		}
+		#game .board span.shead.dS {
+			border-bottom-left-radius: 50%;
+			border-bottom-right-radius: 50%;
+		}
+		#game .board span.shead.dW {
+			border-top-left-radius: 50%;
+			border-bottom-left-radius: 50%;
 		}
 		#game .board span.sbody {
-			opacity: .50;
-			border-radius: 5px;
+			/*opacity: .50;*/
+			/*border-radius: 5px;*/
 		}
 
+		#game .last.dpN {
+			border-bottom-right-radius: 20%;
+			border-bottom-left-radius: 20%;
+		}
+
+		#game .last.dpE {
+			border-top-left-radius: 20%;
+			border-bottom-left-radius: 20%;
+		}
+
+		#game .last.dpS {
+			border-top-right-radius: 20%;
+			border-top-left-radius: 20%;
+		}
+
+		#game .last.dpW {
+			border-top-right-radius: 20%;
+			border-bottom-right-radius: 20%;
+		}
+
+		#game .dpE.dnN,
+		#game .dpN.dnE {
+			border-bottom-left-radius: 50%;
+		}
+		#game .dpN.dnW,
+		#game .dpW.dnN
+		{
+			border-bottom-right-radius: 50%;
+		}
+		#game .dpW.dnS,
+		#game .dpS.dnW
+		{
+			border-top-right-radius: 50%;
+		}
+		#game .dpS.dnE,
+		#game .dpE.dnS
+		{
+			border-top-left-radius: 50%;
+		}
 		/********************************************************************************/
 		#game .modal {
 			position: absolute;
@@ -444,7 +499,17 @@
 			return `<span class="shead d${d} ${cls}"></span>`;
 		}
 		PlainTextTemplate.ATOM_SNAKE_BODY = (atom) => {
-			return `<span class="sbody ${atom.piece.custom?.cssClass}"></span>`;
+			const cls = atom.piece.custom?.cssClass;
+			const total = atom.piece.atoms.length;
+			const max = 90;
+			const min = Math.max(20, max - 5 * total);
+			const step = Math.round((max - min) / total);
+			const op = Math.max(min, 80 - (step * atom.index));
+
+			const dp = atom.dirToPrevious || '-';
+			const dn = atom.dirToNext || '-';
+			const last = atom.isLast ? 'last' : '';
+			return `<span class="sbody ${cls} dp${dp} dn${dn} ${last}" style="opacity: ${op}%"></span>`;
 		}
 
 		let unsubs = [];

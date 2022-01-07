@@ -1,0 +1,1 @@
+export declare const gridRelativeDirection: (normalizedFromXY: number[], normalizedToXY: number[]) => "N" | "E" | "S" | "W" | "NW" | "NNW" | "NWW" | "SW" | "SSW" | "SWW" | "NE" | "NNE" | "NEE" | "SE" | "SSE" | "SEE";
