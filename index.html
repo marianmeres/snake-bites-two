@@ -501,10 +501,10 @@
 		PlainTextTemplate.ATOM_SNAKE_BODY = (atom) => {
 			const cls = atom.piece.custom?.cssClass;
 			const total = atom.piece.atoms.length;
-			const max = 90;
+			const max = 95;
 			const min = Math.max(20, max - 5 * total);
 			const step = Math.round((max - min) / total);
-			const op = Math.max(min, 80 - (step * atom.index));
+			const op = Math.max(min, max - (step * atom.index));
 
 			const dp = atom.dirToPrevious || '-';
 			const dn = atom.dirToNext || '-';
