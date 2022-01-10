@@ -1,0 +1,92 @@
+#game .board {
+	font-size: calc(1rem + min(.6vw, .6vh));
+	/*font-size: 1rem;*/
+	line-height: 1;
+	border: 5px solid rgba(0, 0, 0, 1);
+	display: block;
+	min-height: calc(var(--cell-y-count) * var(--cell-min-xy));
+	min-width: calc(var(--cell-x-count) * var(--cell-min-xy));
+	background: white;
+}
+#game .board .row {
+	display: flex;
+}
+#game .board span {
+	/*outline: 1px dashed rgba(0, 0, 0, .1);*/
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	width: var(--cell-xy);
+	height: var(--cell-xy);
+	max-width: 40px;
+	max-height: 40px;
+	min-width: 20px;
+	min-height: 20px;
+	border-right: 1px dashed rgba(0, 0, 0, .05);
+	border-bottom: 1px dashed rgba(0, 0, 0, .05);
+}
+#game .board span.shead.snake1, #game .board span.sbody.snake1 {
+	background: mediumvioletred;
+}
+#game .board span.shead.snake2, #game .board span.sbody.snake2 {
+	background: darkcyan;
+}
+#game .board span.shead {
+	/*border-radius: 5px;*/
+}
+#game .board span.shead.dN {
+	border-top-right-radius: 50%;
+	border-top-left-radius: 50%;
+}
+#game .board span.shead.dE {
+	border-top-right-radius: 50%;
+	border-bottom-right-radius: 50%;
+}
+#game .board span.shead.dS {
+	border-bottom-left-radius: 50%;
+	border-bottom-right-radius: 50%;
+}
+#game .board span.shead.dW {
+	border-top-left-radius: 50%;
+	border-bottom-left-radius: 50%;
+}
+
+#game .last.dpN {
+	border-bottom-right-radius: 20%;
+	border-bottom-left-radius: 20%;
+}
+
+#game .last.dpE {
+	border-top-left-radius: 20%;
+	border-bottom-left-radius: 20%;
+}
+
+#game .last.dpS {
+	border-top-right-radius: 20%;
+	border-top-left-radius: 20%;
+}
+
+#game .last.dpW {
+	border-top-right-radius: 20%;
+	border-bottom-right-radius: 20%;
+}
+
+#game .dpE.dnN,
+#game .dpN.dnE {
+	border-bottom-left-radius: 50%;
+}
+#game .dpN.dnW,
+#game .dpW.dnN
+{
+	border-bottom-right-radius: 50%;
+}
+#game .dpW.dnS,
+#game .dpS.dnW
+{
+	border-top-right-radius: 50%;
+}
+#game .dpS.dnE,
+#game .dpE.dnS
+{
+	border-top-left-radius: 50%;
+}

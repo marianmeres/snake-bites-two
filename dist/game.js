@@ -13,7 +13,7 @@ const defaultFactoryOptions = {
     x: 23,
     y: 13,
     updateTickFrequencyHz: 5,
-    maxObstacles: 5,
+    obstaclesCount: 3,
     // the lower value, the higher prob (1 on each bonus like event)
     bonusProbability: 2,
     eatAppleScore: 2,
@@ -63,9 +63,8 @@ export class Game {
         // set up first apple
         board.setPieceAtRandomEmptyXY(new Apple());
         // maybe set up obstacles
-        if (options.maxObstacles > 0) {
-            const oCount = getRandomIntInclusive(Math.max(1, Math.floor(options.maxObstacles * 0.6)), options.maxObstacles);
-            for (let i = 0; i < oCount; i++) {
+        if (options.obstaclesCount > 0) {
+            for (let i = 0; i < options.obstaclesCount; i++) {
                 board.setPieceAtRandomEmptyXY(new Obstacle());
             }
         }
@@ -102,6 +101,7 @@ export class Game {
                 board.update();
             }
             catch (e) {
+                console.error(e);
                 loop.stop();
             }
         }, (ts) => options.renderFn(board), () => isFn(options.setUpFn) && options.setUpFn(board), () => isFn(options.tearDownFn) && options.tearDownFn(board));

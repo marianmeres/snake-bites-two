@@ -1,0 +1,69 @@
+:root {
+	--cell-xy: min(4vw, 3.5vh);
+	--cell-x-count: 23;
+	--cell-y-count: 13;
+	--cell-min-xy: 20px;
+	--cell-max-xy: 40px;
+}
+body {
+	height: 100vh;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	font-family: var(--bs-font-monospace);
+	/*padding: 1rem;*/
+	background: cyan;
+	background: radial-gradient(
+		circle,
+		rgba(0,255,255,1) 33%,
+		rgba(0,172,172,1) 100%
+	);
+}
+
+h1, h2, h3 {
+	font-family: 'Luckiest Guy', var(--bs-font-sans-serif);
+}
+
+h1 {
+	-webkit-text-stroke: 2px white;
+}
+a {
+	color: black;
+}
+a:hover {
+	color: deeppink;
+}
+button {
+	border: 3px solid black;
+	padding: 4px 8px;
+	background: white;
+	color: black;
+}
+button:focus,
+button:hover {
+	outline: none;
+	box-shadow: 3px 3px white;
+}
+
+/********************************************************************************/
+#top {
+	margin-bottom: 2rem;
+	text-align: center;
+	max-width: 600px;
+}
+
+#bottom {
+	margin-top: 2rem;
+	text-align: center;
+	max-width: 600px;
+}
+
+#bottom .cpr {
+	margin-top: 3rem; opacity: .6; border-top: 1px solid rgba(0, 0, 0, .3);
+	padding-top: 1rem;
+}
+
+#game {
+	position: relative;
+}

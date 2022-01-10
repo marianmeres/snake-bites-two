@@ -6,7 +6,7 @@ interface FactoryOptions {
     x: number;
     y: number;
     updateTickFrequencyHz: number;
-    maxObstacles: number;
+    obstaclesCount: number;
     bonusProbability: number;
     eatAppleScore: number;
     eatBonusScore: number;

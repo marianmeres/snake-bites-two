@@ -2,7 +2,7 @@ import { createId } from './utils/create-id.js';
 import { renderAtomPlainText } from './renderer/plain-text.js';
 import { isFn } from './utils/is-fn.js';
 import { Piece } from './piece.js';
-import { gridRelativeDirection } from "./utils/grid-relative-direction.js";
+import { gridRelativeDirection } from './utils/grid-relative-direction.js';
 export class Atom {
     piece;
     type;

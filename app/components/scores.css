@@ -1,0 +1,37 @@
+#scores {
+	display: flex;
+	flex-direction: row;
+	flex-wrap: nowrap;
+	justify-content: space-between;
+	align-items: center;
+	width: calc(var(--cell-x-count) * var(--cell-xy) + 10px);
+	min-width: calc(var(--cell-x-count) * var(--cell-min-xy) + 10px);
+	max-width: calc(var(--cell-x-count) * var(--cell-max-xy) + 10px);
+}
+#scores .score {
+	background: black;
+	color: rgba(255, 255, 255, .75);
+	padding: 3px 10px;
+}
+#scores .score b {
+	color: white;
+	font-weight: bold;
+	font-size: 1.1em;
+}
+#scores .speed button {
+	padding: 0;
+	border: 0;
+	font-size: .8em;
+	line-height: 1;
+	background: transparent;
+}
+#scores .speed button.active,
+#scores .speed button:focus,
+#scores .speed button:hover {
+	box-shadow: none;
+	background: white;
+}
+#scores .speed button[disabled] {
+	opacity: .7;
+	cursor: not-allowed;
+}

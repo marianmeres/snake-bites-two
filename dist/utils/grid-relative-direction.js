@@ -12,6 +12,7 @@ export const gridRelativeDirection = (normalizedFromXY, normalizedToXY) => {
     const ady = Math.abs(dy);
     if (!dx && !dy)
         return null;
+    // hm... kinda ugly...
     if (dx < 0) {
         if (dy < 0) {
             if (adx === ady)
