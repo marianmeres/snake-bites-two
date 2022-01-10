@@ -132,7 +132,7 @@ export class Game {
 				try {
 					board.update();
 				} catch (e) {
-					console.error(e);
+					console.warn(e.toString());
 					loop.stop();
 				}
 			},

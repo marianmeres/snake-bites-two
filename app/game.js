@@ -4,7 +4,7 @@ import { $on } from "../dist/utils/dom.js";
 import { isFn } from "../dist/utils/is-fn.js";
 import { GAME_EVENT } from "../dist/constants.js";
 import { Game } from "../dist/game.js";
-
+import { EJS } from "./ejs.js";
 
 // This is just a quick-n-dirty (and probably expensive) misuse of the plain-text
 // debug renderer... I guess it could be easily optimized:
@@ -21,7 +21,7 @@ PlainTextTemplate.ROW = (cells) => `<div class="row">${cells}</div>`;
 PlainTextTemplate.ATOM_SNAKE_HEAD = (atom) => {
 	const d = atom.piece.direction;
 	const cls = atom.piece.custom?.cssClass;
-	return `<span class="shead d${d} ${cls}"></span>`;
+	return `<span class="shead d${d} ${cls}">${EJS.snake_eyes({})}</span>`;
 }
 PlainTextTemplate.ATOM_SNAKE_BODY = (atom) => {
 	const cls = atom.piece.custom?.cssClass;

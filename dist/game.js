@@ -101,7 +101,7 @@ export class Game {
                 board.update();
             }
             catch (e) {
-                console.error(e);
+                console.warn(e.toString());
                 loop.stop();
             }
         }, (ts) => options.renderFn(board), () => isFn(options.setUpFn) && options.setUpFn(board), () => isFn(options.tearDownFn) && options.tearDownFn(board));
