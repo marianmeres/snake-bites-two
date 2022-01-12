@@ -4,8 +4,7 @@
 	flex-wrap: nowrap;
 	justify-content: space-between;
 	align-items: center;
-	width: calc(var(--cell-x-count) * var(--cell-size));
-	border-bottom: 5px solid black;
+	width: calc(var(--cell-x-count) * var(--cell-size) + 10px);
 }
 #scores .score {
 	background: black;

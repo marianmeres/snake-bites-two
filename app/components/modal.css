@@ -1,6 +1,6 @@
 #game .modal {
 	position: absolute;
-	inset: 0;
+	inset: 5px;
 	display: flex;
 	flex-direction: column;
 	justify-content: center;

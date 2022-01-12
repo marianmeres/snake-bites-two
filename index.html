@@ -71,7 +71,7 @@
 		<div id="scores"></div>
 		<section id="game">
 			<div class="board"><div style="padding: 2rem; text-align: center">Loading, please wait...</div></div>
-			<div class="modal"></div>
+			<div class="modal" hidden></div>
 		</section>
 	</div>
 
@@ -102,7 +102,9 @@
 
 		// compile this landing page ejs templates (if any)
 		$each(qsa('script[type="application/x-ejs"]'), (v) => {
-			if (v.dataset.name) EJS[v.dataset.name] = template(v.innerText, { variable: 'data' });
+			if (v.dataset.name) {
+				EJS[v.dataset.name] = template(v.innerText, { variable: 'data' });
+			}
 		});
 
 		// this page components
@@ -114,8 +116,8 @@
 		const $gameWrap = qs('#game-wrap');
 		const setCellSize = () => {
 			const box = $gameWrap.getBoundingClientRect();
-			const w = Math.floor(box.width / 23); // todo: refactor reading config
-			const h = Math.floor(box.height / 13); // todo: refactor reading config
+			const w = Math.floor((box.width + 10) / 23); // todo: refactor reading config
+			const h = Math.floor((box.height + 10) / 13); // todo: refactor reading config
 			const size = Math.min(40, Math.min(w, h));
 			document.documentElement.style.setProperty('--cell-size', `${size}px`);
 		}

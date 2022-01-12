@@ -1,8 +1,7 @@
 #game .board {
 	display: block;
 	background: white;
-	/*width: 100%;*/
-	/*height: 100%;*/
+	border: 5px solid black;
 }
 #game .board .row {
 	display: flex;

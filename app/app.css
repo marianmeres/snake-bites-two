@@ -1,11 +1,9 @@
 :root {
 	--cell-x-count: 23;
 	--cell-y-count: 13;
-
+	--max-w-copy: 600px;
 	/* will be set at runtime */
 	--cell-size: 20px;
-
-	--max-w-copy: 600px;
 }
 body {
 	height: 100vh;
@@ -85,6 +83,4 @@ button:hover {
 
 #game {
 	position: relative;
-	width: calc(var(--cell-size) * var(--cell-x-count));
-	height: calc(var(--cell-size) * var(--cell-y-count));
 }
