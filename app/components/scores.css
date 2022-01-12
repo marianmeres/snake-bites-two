@@ -4,9 +4,8 @@
 	flex-wrap: nowrap;
 	justify-content: space-between;
 	align-items: center;
-	width: calc(var(--cell-x-count) * var(--cell-xy) + 10px);
-	min-width: calc(var(--cell-x-count) * var(--cell-min-xy) + 10px);
-	max-width: calc(var(--cell-x-count) * var(--cell-max-xy) + 10px);
+	width: calc(var(--cell-x-count) * var(--cell-size));
+	border-bottom: 5px solid black;
 }
 #scores .score {
 	background: black;

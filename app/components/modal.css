@@ -5,9 +5,7 @@
 	flex-direction: column;
 	justify-content: center;
 	align-items: center;
-	/*padding: 6rem 1rem 1rem 1rem;*/
 	text-align: center;
-	/*background: rgba(186, 85, 211, .8);*/
 	background: radial-gradient(
 		circle,
 		rgba(255, 0, 255, .8) 0%,

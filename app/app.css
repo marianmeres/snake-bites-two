@@ -1,24 +1,29 @@
 :root {
-	--cell-xy: min(4vw, 3.5vh);
 	--cell-x-count: 23;
 	--cell-y-count: 13;
-	--cell-min-xy: 20px;
-	--cell-max-xy: 40px;
+
+	/* will be set at runtime */
+	--cell-size: 20px;
+
+	--max-w-copy: 600px;
 }
 body {
 	height: 100vh;
+	max-height: 100vh;
+	overflow: hidden;
+
 	display: flex;
 	flex-direction: column;
 	justify-content: center;
 	align-items: center;
 	font-family: var(--bs-font-monospace);
-	/*padding: 1rem;*/
 	background: cyan;
 	background: radial-gradient(
 		circle,
 		rgba(0,255,255,1) 33%,
 		rgba(0,172,172,1) 100%
 	);
+	padding: 20px;
 }
 
 h1, h2, h3 {
@@ -48,22 +53,38 @@ button:hover {
 
 /********************************************************************************/
 #top {
-	margin-bottom: 2rem;
+	margin: 20px 0;
 	text-align: center;
-	max-width: 600px;
+	max-width: var(--max-w-copy);
 }
 
 #bottom {
-	margin-top: 2rem;
+	margin-top: 20px;
 	text-align: center;
-	max-width: 600px;
+	max-width: var(--max-w-copy);
 }
 
 #bottom .cpr {
-	margin-top: 3rem; opacity: .6; border-top: 1px solid rgba(0, 0, 0, .3);
-	padding-top: 1rem;
+	margin-top: 20px; opacity: .6; border-top: 1px solid rgba(0, 0, 0, .3);
+	padding-top: 20px;
+	font-size: .9rem;
+}
+
+
+#game-wrap {
+	flex: 1;
+	position: relative;
+	width: 100%;
+	height: 100%;
+
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
 }
 
 #game {
 	position: relative;
+	width: calc(var(--cell-size) * var(--cell-x-count));
+	height: calc(var(--cell-size) * var(--cell-y-count));
 }

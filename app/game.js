@@ -13,27 +13,39 @@ import { EJS } from "./ejs.js";
 // - or as canvas drawing...
 // Both should be doable via Board.renderer and Atom.renderer
 
+// removing emojis, since they differ on platform/os and are harder to size correctly
+// PlainTextTemplate.ATOM_APPLE = (atom) => '<span class="apple">&#x1F34E;</span>';
+// PlainTextTemplate.ATOM_BONUS = (atom) => '<span class="obstacle">&#x1F36D;</span>';
+// PlainTextTemplate.ATOM_OBSTACLE = (atom) => '<span class="obstacle">&#x1F4A9;</span>';
+
 PlainTextTemplate.CELL_EMPTY = () => '<span></span>';
-PlainTextTemplate.ATOM_APPLE = (atom) => '<span class="apple">&#x1F34E;</span>';
-PlainTextTemplate.ATOM_OBSTACLE = (atom) => '<span class="obstacle">&#x1F4A9;</span>';
-PlainTextTemplate.ATOM_BONUS = (atom) => '<span class="obstacle">&#x1F36D;</span>';
 PlainTextTemplate.ROW = (cells) => `<div class="row">${cells}</div>`;
+
+PlainTextTemplate.ATOM_APPLE = (atom) => `<span>${EJS.apple({})}</span>`;
+PlainTextTemplate.ATOM_OBSTACLE = (atom) => `<span>${EJS.poo({})}</span>`;
+PlainTextTemplate.ATOM_BONUS = (atom) => `<span>${EJS.lollipop({})}</span>`;
+
 PlainTextTemplate.ATOM_SNAKE_HEAD = (atom) => {
 	const d = atom.piece.direction;
 	const cls = atom.piece.custom?.cssClass;
 	return `<span class="shead d${d} ${cls}">${EJS.snake_eyes({})}</span>`;
 }
+
 PlainTextTemplate.ATOM_SNAKE_BODY = (atom) => {
 	const cls = atom.piece.custom?.cssClass;
 	const total = atom.piece.atoms.length;
+
+	// opacity dance
 	const max = 95;
 	const min = Math.max(20, max - 5 * total);
 	const step = Math.round((max - min) / total);
 	const op = Math.max(min, max - (step * atom.index));
 
+	// border radius
 	const dp = atom.dirToPrevious || '-';
 	const dn = atom.dirToNext || '-';
 	const last = atom.isLast ? 'last' : '';
+
 	return `<span class="sbody ${cls} dp${dp} dn${dn} ${last}" style="opacity: ${op}%"></span>`;
 }
 
@@ -54,6 +66,8 @@ export const initialize = () => {
 		twoPlayers: twoPlayerSwitch.get(),
 		renderFn,
 		tearDownFn,
+		x: 23,
+		y: 13,
 	});
 
 	// "forward" loop state
