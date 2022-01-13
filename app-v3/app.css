@@ -1,3 +1,7 @@
+@import "components/scores.css";
+@import "components/board.css";
+@import "components/modal.css";
+
 :root {
 	--cell-x-count: 23;
 	--cell-y-count: 13;
