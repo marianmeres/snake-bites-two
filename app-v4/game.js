@@ -1,6 +1,6 @@
 import { PlainTextTemplate } from "../dist/renderer/plain-text.js";
-import { boardHTML, gameLoopState, lastCollision, scores, speed, twoPlayerSwitch } from "./stores.js";
-import { $on } from "../dist/utils/dom.js";
+import { boardHTML, gameLoopState, lastCollision, scores, sound, speed, twoPlayerSwitch } from "./stores.js";
+import { $on, qs } from "../dist/utils/dom.js";
 import { isFn } from "../dist/utils/is-fn.js";
 import { GAME_EVENT } from "../dist/constants.js";
 import { Game } from "../dist/game.js";
@@ -57,6 +57,10 @@ const tearDownFn = () => {
 
 const renderFn = (b) => boardHTML.set(b.toString());
 
+const $soundApple = qs('#soundApple');
+const $soundBonus = qs('#soundBonus');
+const $soundCrash = qs('#soundCrash');
+
 export const initialize = () => {
 	tearDownFn();
 	scores.set({ score1: 0, score2: 0 });
@@ -83,7 +87,18 @@ export const initialize = () => {
 		}))
 	});
 
-	unsubs.push(board.pubsub.subscribe(GAME_EVENT.COLLISION, lastCollision.set));
+	unsubs.push(board.pubsub.subscribe(GAME_EVENT.COLLISION, (v) => {
+		lastCollision.set(v);
+		sound.get() && $soundCrash.play();
+	}));
+
+	unsubs.push(board.pubsub.subscribe(GAME_EVENT.SNAKE_EATS_APPLE, () => {
+		sound.get() && $soundApple.play();
+	}));
+
+	unsubs.push(board.pubsub.subscribe(GAME_EVENT.SNAKE_EATS_BONUS, () => {
+		sound.get() && $soundBonus.play();
+	}));
 
 	renderFn(board);
 }

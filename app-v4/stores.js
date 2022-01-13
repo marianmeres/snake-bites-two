@@ -13,3 +13,5 @@ export const gameLoopState = createStore({
 export const lastCollision = createStore({});
 
 export const speed = createStore(5);
+
+export const sound = createStore(true);

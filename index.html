@@ -20,7 +20,7 @@
 		gtag('config', 'UA-24912372-2');
 	</script>
 
-	<link rel="stylesheet" href="app-v3/app.css">
+	<link rel="stylesheet" href="app-v4/app.css">
 </head>
 <body>
 	<script data-name="icon_check_circle" type="application/x-ejs">
@@ -57,6 +57,20 @@
 		</svg>
 	</script>
 
+	<script data-name="icon_sound_on" type="application/x-ejs">
+		<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-volume-up" viewBox="0 0 16 16">
+			<path d="M11.536 14.01A8.473 8.473 0 0 0 14.026 8a8.473 8.473 0 0 0-2.49-6.01l-.708.707A7.476 7.476 0 0 1 13.025 8c0 2.071-.84 3.946-2.197 5.303l.708.707z"/>
+			<path d="M10.121 12.596A6.48 6.48 0 0 0 12.025 8a6.48 6.48 0 0 0-1.904-4.596l-.707.707A5.483 5.483 0 0 1 11.025 8a5.483 5.483 0 0 1-1.61 3.89l.706.706z"/>
+			<path d="M10.025 8a4.486 4.486 0 0 1-1.318 3.182L8 10.475A3.489 3.489 0 0 0 9.025 8c0-.966-.392-1.841-1.025-2.475l.707-.707A4.486 4.486 0 0 1 10.025 8zM7 4a.5.5 0 0 0-.812-.39L3.825 5.5H1.5A.5.5 0 0 0 1 6v4a.5.5 0 0 0 .5.5h2.325l2.363 1.89A.5.5 0 0 0 7 12V4zM4.312 6.39 6 5.04v5.92L4.312 9.61A.5.5 0 0 0 4 9.5H2v-3h2a.5.5 0 0 0 .312-.11z"/>
+		</svg>
+	</script>
+
+	<script data-name="icon_sound_off" type="application/x-ejs">
+		<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-volume-mute" viewBox="0 0 16 16">
+			<path d="M6.717 3.55A.5.5 0 0 1 7 4v8a.5.5 0 0 1-.812.39L3.825 10.5H1.5A.5.5 0 0 1 1 10V6a.5.5 0 0 1 .5-.5h2.325l2.363-1.89a.5.5 0 0 1 .529-.06zM6 5.04 4.312 6.39A.5.5 0 0 1 4 6.5H2v3h2a.5.5 0 0 1 .312.11L6 10.96V5.04zm7.854.606a.5.5 0 0 1 0 .708L12.207 8l1.647 1.646a.5.5 0 0 1-.708.708L11.5 8.707l-1.646 1.647a.5.5 0 0 1-.708-.708L10.793 8 9.146 6.354a.5.5 0 1 1 .708-.708L11.5 7.293l1.646-1.647a.5.5 0 0 1 .708 0z"/>
+		</svg>
+	</script>
+
 	<noscript>This app requires javascript!</noscript>
 
 	<div id="top">
@@ -86,16 +100,20 @@
 		</p>
 	</div>
 
+	<audio id='soundApple' preload><source src="app-v4/apple.mp3" type="audio/mpeg" /></audio>
+	<audio id='soundBonus' preload><source src="app-v4/bonus.mp3" type="audio/mpeg" /></audio>
+	<audio id='soundCrash' preload><source src="app-v4/crash.mp3" type="audio/mpeg" /></audio>
+
 	<script type="module">
 		import template from "./node_modules/lodash-es/template.js";
 		import debounce from "./node_modules/lodash-es/debounce.js";
 		import { $each, $on, qs, qsa } from "./dist/utils/dom.js";
-		import { EJS } from "./app-v3/ejs.js";
-		import { boardHTML, scores, speed, twoPlayerSwitch } from "./app-v3/stores.js";
-		import { cmpScores } from "./app-v3/components/scores.js";
-		import { cmpBoard } from "./app-v3/components/board.js";
-		import { cmpModal } from "./app-v3/components/modal.js";
-		import { initialize } from "./app-v3/game.js";
+		import { EJS } from "./app-v4/ejs.js";
+		import { boardHTML, scores, speed, twoPlayerSwitch } from "./app-v4/stores.js";
+		import { cmpScores } from "./app-v4/components/scores.js";
+		import { cmpBoard } from "./app-v4/components/board.js";
+		import { cmpModal } from "./app-v4/components/modal.js";
+		import { initialize } from "./app-v4/game.js";
 
 		// compile this landing page ejs templates (if any)
 		$each(qsa('script[type="application/x-ejs"]'), (v) => {
@@ -115,7 +133,7 @@
 			const box = $gameWrap.getBoundingClientRect();
 			const w = Math.floor((box.width + 10) / 23); // todo: refactor reading config
 			const h = Math.floor((box.height + 10) / 13); // todo: refactor reading config
-			const size = Math.min(40, Math.min(w, h));
+			const size = Math.min(48, Math.min(w, h));
 			document.documentElement.style.setProperty('--cell-size', `${size}px`);
 		}
 		setCellSize();
