@@ -3,7 +3,7 @@ import { isFn } from './is-fn.js';
 export const createPubSub = () => {
 	const _subs = new Map();
 	const _subsFor = (event) => {
-		if (!_subs.has(event)) _subs.set(event, new Set())
+		if (!_subs.has(event)) _subs.set(event, new Set());
 		return _subs.get(event);
 	};
 
