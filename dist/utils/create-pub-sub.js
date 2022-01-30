@@ -1,7 +1,11 @@
 import { isFn } from './is-fn.js';
 export const createPubSub = () => {
     const _subs = new Map();
-    const _subsFor = (event) => (_subs[event] = _subs[event] || new Set());
+    const _subsFor = (event) => {
+        if (!_subs.has(event))
+            _subs.set(event, new Set());
+        return _subs.get(event);
+    };
     const publish = (event, detail = {}) => {
         _subsFor(event).forEach((cb) => cb(detail));
     };

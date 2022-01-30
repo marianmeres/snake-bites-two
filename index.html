@@ -20,7 +20,7 @@
 		gtag('config', 'UA-24912372-2');
 	</script>
 
-	<link rel="stylesheet" href="app-v4/app.css">
+	<link rel="stylesheet" href="app-v5/app.css">
 </head>
 <body>
 	<script data-name="icon_check_circle" type="application/x-ejs">
@@ -100,20 +100,20 @@
 		</p>
 	</div>
 
-	<audio id='soundApple' preload><source src="app-v4/apple.mp3" type="audio/mpeg" /></audio>
-	<audio id='soundBonus' preload><source src="app-v4/bonus.mp3" type="audio/mpeg" /></audio>
-	<audio id='soundCrash' preload><source src="app-v4/crash.mp3" type="audio/mpeg" /></audio>
+	<audio id='soundApple' preload><source src="app-v5/apple.mp3" type="audio/mpeg" /></audio>
+	<audio id='soundBonus' preload><source src="app-v5/bonus.mp3" type="audio/mpeg" /></audio>
+	<audio id='soundCrash' preload><source src="app-v5/crash.mp3" type="audio/mpeg" /></audio>
 
 	<script type="module">
 		import template from "./node_modules/lodash-es/template.js";
 		import debounce from "./node_modules/lodash-es/debounce.js";
 		import { $each, $on, qs, qsa } from "./dist/utils/dom.js";
-		import { EJS } from "./app-v4/ejs.js";
-		import { boardHTML, scores, speed, twoPlayerSwitch } from "./app-v4/stores.js";
-		import { cmpScores } from "./app-v4/components/scores.js";
-		import { cmpBoard } from "./app-v4/components/board.js";
-		import { cmpModal } from "./app-v4/components/modal.js";
-		import { initialize } from "./app-v4/game.js";
+		import { EJS } from "./app-v5/ejs.js";
+		import { boardHTML, scores, speed, twoPlayerSwitch } from "./app-v5/stores.js";
+		import { cmpScores } from "./app-v5/components/scores.js";
+		import { cmpBoard } from "./app-v5/components/board.js";
+		import { cmpModal } from "./app-v5/components/modal.js";
+		import { initialize } from "./app-v5/game.js";
 
 		// compile this landing page ejs templates (if any)
 		$each(qsa('script[type="application/x-ejs"]'), (v) => {

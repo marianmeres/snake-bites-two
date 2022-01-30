@@ -37,7 +37,7 @@ export declare abstract class Piece {
     update(): this;
     atomize(): Atom[][];
     protected _customCollisionHandler(atom: Atom): Boolean;
-    protected _mayberHandleCollision(preUpdateAtomsGrid: Atom[][], oldX: number, oldY: number): void;
+    protected _maybeHandleCollision(preUpdateAtomsGrid: Atom[][], oldX: number, oldY: number): void;
     postMoveActionStackPush(fn: Function): Piece;
     turnNorth(): this;
     turnEast(): this;

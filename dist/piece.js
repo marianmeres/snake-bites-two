@@ -95,7 +95,7 @@ export class Piece {
         this._atoms.forEach((atom) => atom.update(oldAtomsCoords));
         // has position been updated? (could have updated some other props as well...)
         if (oldX !== this.x || oldY !== this.y) {
-            this._mayberHandleCollision(preUpdateAtomsGrid, oldX, oldY);
+            this._maybeHandleCollision(preUpdateAtomsGrid, oldX, oldY);
             this.board.setPiece(oldX, oldY, null);
             this.board.setPiece(this.x, this.y, this);
             if (this._postMoveActionStack.length) {
@@ -117,7 +117,7 @@ export class Piece {
     _customCollisionHandler(atom) {
         return false;
     }
-    _mayberHandleCollision(preUpdateAtomsGrid, oldX, oldY) {
+    _maybeHandleCollision(preUpdateAtomsGrid, oldX, oldY) {
         const collidingAtom = preUpdateAtomsGrid[this.x][this.y];
         // noop if nothing collides
         if (!collidingAtom)

@@ -122,7 +122,7 @@ export abstract class Piece {
 
 		// has position been updated? (could have updated some other props as well...)
 		if (oldX !== this.x || oldY !== this.y) {
-			this._mayberHandleCollision(preUpdateAtomsGrid, oldX, oldY);
+			this._maybeHandleCollision(preUpdateAtomsGrid, oldX, oldY);
 			this.board.setPiece(oldX, oldY, null);
 			this.board.setPiece(this.x, this.y, this);
 
@@ -149,7 +149,7 @@ export abstract class Piece {
 		return false;
 	}
 
-	protected _mayberHandleCollision(
+	protected _maybeHandleCollision(
 		preUpdateAtomsGrid: Atom[][],
 		oldX: number,
 		oldY: number
